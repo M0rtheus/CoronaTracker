@@ -40,11 +40,16 @@ public class CoronaVirusDataService {
             CountryCases countryCase = new CountryCases();
             countryCase.setProvince(record.get("Province/State"));
             countryCase.setCountry(record.get("Country/Region"));
-            countryCase.setLatestTotal(Integer.parseInt(record.get(record.size() - 1)));
-            System.out.println(countryCase);
+            int latestCases = Integer.parseInt(record.get(record.size() - 1));
+            int prevDayCases = Integer.parseInt(record.get(record.size() - 2));
+            countryCase.setLatestTotal(latestCases);
+            countryCase.setDeltaFromPrevDay(latestCases - prevDayCases);
             newCases.add(countryCase);
         }
         this.allCases = newCases;
     }
 
+    public List<CountryCases> getAllCases() {
+        return allCases;
+    }
 }

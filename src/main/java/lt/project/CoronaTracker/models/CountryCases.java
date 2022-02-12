@@ -5,6 +5,7 @@ public class CountryCases {
     private String province;
     private String country;
     private int latestTotal;
+    private int deltaFromPrevDay;
 
     public String getProvince() {
         return province;
@@ -28,6 +29,14 @@ public class CountryCases {
 
     public void setLatestTotal(int latestTotal) {
         this.latestTotal = latestTotal;
+    }
+
+    public int getDeltaFromPrevDay() {
+        return deltaFromPrevDay;
+    }
+
+    public void setDeltaFromPrevDay(int deltaFromPrevDay) {
+        this.deltaFromPrevDay = deltaFromPrevDay;
     }
 
     @Override
