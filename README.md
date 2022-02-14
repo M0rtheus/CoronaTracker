@@ -1,7 +1,7 @@
 ## Screenshots
 
 <p float="left">
-<img src="https://github.com/M0rtheus/CoronaTracker/blob/master/images/home.png">
+<img src="https://github.com/M0rtheus/CoronaTracker/blob/master/images/home.png" width="960" height="520">
 <img src="https://github.com/M0rtheus/CoronaTracker/blob/master/images/countries.png">
 </p>
 
