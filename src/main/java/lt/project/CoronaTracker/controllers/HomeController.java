@@ -1,7 +1,7 @@
 package lt.project.CoronaTracker.controllers;
 
 import lt.project.CoronaTracker.models.CountryCases;
-import lt.project.CoronaTracker.services.CoronaVirusDataService;
+import lt.project.CoronaTracker.services.CountryCasesDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,11 +13,11 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    CoronaVirusDataService coronaVirusDataService;
+    CountryCasesDataService countryCasesDataService;
 
     @GetMapping("/")
-    public String home(Model model){
-        List<CountryCases> allCases = coronaVirusDataService.getAllCases();
+    public String home(Model model) {
+        List<CountryCases> allCases = countryCasesDataService.getAllCases();
         int totalCases = allCases.stream().mapToInt(cases -> cases.getLatestTotal()).sum();
         model.addAttribute("countryCases", allCases);
         model.addAttribute("totalCases", totalCases);

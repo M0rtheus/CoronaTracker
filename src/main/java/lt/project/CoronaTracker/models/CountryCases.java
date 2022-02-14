@@ -1,11 +1,30 @@
 package lt.project.CoronaTracker.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "totalCases")
 public class CountryCases {
 
+    @Id
+    @Column(name = "id")
+    private int id;
+    @Column(name = "province")
     private String province;
+    @Column(name = "country")
     private String country;
+    @Column(name = "latestTotal")
     private int latestTotal;
+    @Column(name = "deltaFromPrevDay")
     private int deltaFromPrevDay;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getProvince() {
         return province;
