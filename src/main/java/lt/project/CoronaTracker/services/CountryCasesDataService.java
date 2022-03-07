@@ -1,6 +1,7 @@
 package lt.project.CoronaTracker.services;
 
 import lt.project.CoronaTracker.csv.CSVHelper;
+import lt.project.CoronaTracker.exception.CountryNotFoundException;
 import lt.project.CoronaTracker.models.CountryCases;
 import lt.project.CoronaTracker.repository.CountryCasesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@Transactional
 public class CountryCasesDataService {
 
     @Autowired
@@ -31,16 +35,12 @@ public class CountryCasesDataService {
         return countryCasesRepository.findAll();
     }
 
-    public void fetchCountryCases(String country, String province) throws IOException, InterruptedException {
-        csvHelper.fetchCountryCases(country, province);
+    public Map<String, String> getCountryCases(String country, String province) throws IOException, InterruptedException {
+        return csvHelper.getCountryCases(country, province);
     }
 
-    public List<String> getDates() {
-        return csvHelper.getDates();
+    public CountryCases findCountryCasesById(int id) {
+        return countryCasesRepository.findCountryCasesById(id)
+                .orElseThrow(() -> new CountryNotFoundException("Country by id " + id + " was not found"));
     }
-
-    public List<Integer> getDailyCases() {
-        return csvHelper.getDailyCases();
-    }
-
 }

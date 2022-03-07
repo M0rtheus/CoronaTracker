@@ -12,27 +12,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 @Component("csvHelper")
 public class CSVHelper {
 
     private static String DATA_URL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
     private List<CountryCases> allCases = new ArrayList<>();
-    private List<String> dates = new ArrayList<>();
-    private List<Integer> dailyCases = new ArrayList<>();
+
 
     public List<CountryCases> fetchData() throws IOException, InterruptedException {
+        Iterable<CSVRecord> records = getCsvRecord();
         List<CountryCases> newCases = new ArrayList<>();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(DATA_URL))
-                .build();
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        StringReader csvBodyReader = new StringReader(response.body());
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build().parse(csvBodyReader);
 
         int i = 1;
         for (CSVRecord record : records) {
@@ -52,10 +45,27 @@ public class CSVHelper {
         return this.allCases;
     }
 
-    public void fetchCountryCases(String country, String province) throws IOException, InterruptedException {
-        Map<String, String> newCountryCases = new TreeMap<>();
-        List<String> newDates = new ArrayList<>();
-        List<Integer> newDailyCases = new ArrayList<>();
+    public Map<String, String> getCountryCases(String country, String province) throws IOException, InterruptedException {
+
+        Iterable<CSVRecord> records = getCsvRecord();
+        Map<String, String> countryCases = new LinkedHashMap<>();
+
+        for (CSVRecord record : records) {
+            if (country.equals(record.get("Country/Region")) && province.equals(record.get("Province/State"))) {
+                countryCases = record.toMap();
+            }
+
+        }
+
+        countryCases.remove("Province/State");
+        countryCases.remove("Country/Region");
+        countryCases.remove("Lat");
+        countryCases.remove("Long");
+
+        return countryCases;
+    }
+
+    public Iterable getCsvRecord() throws IOException, InterruptedException{
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DATA_URL))
@@ -63,32 +73,6 @@ public class CSVHelper {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         StringReader csvBodyReader = new StringReader(response.body());
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build().parse(csvBodyReader);
-
-        for (CSVRecord record : records) {
-            if (country.equals(record.get("Country/Region")) && province.equals(record.get("Province/State"))) {
-                newCountryCases = record.toMap();
-            }
-
-        }
-
-        int i = 0;
-        for (Map.Entry<String, String> entry : newCountryCases.entrySet()) {
-
-            if (i > 4) {
-                newDates.add(entry.getKey());
-                newDailyCases.add(Integer.parseInt(entry.getValue()));
-            }
-            i++;
-        }
-        this.dates = newDates;
-        this.dailyCases = newDailyCases;
-    }
-
-    public List<String> getDates() {
-        return dates;
-    }
-
-    public List<Integer> getDailyCases() {
-        return dailyCases;
+        return records;
     }
 }
