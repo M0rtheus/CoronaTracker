@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -21,13 +20,13 @@ public class Controller {
     CountryCasesDataService countryCasesDataService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<CountryCases>> getAllEmployees () {
+    public ResponseEntity<List<CountryCases>> getAllCases() {
         List<CountryCases> allCases = countryCasesDataService.getAllCases();
         return new ResponseEntity<>(allCases, HttpStatus.OK);
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<CountryCases> getEmployeeById (@PathVariable("id") int id) {
+    public ResponseEntity<CountryCases> getCountryById(@PathVariable("id") int id) {
         CountryCases countryCases = countryCasesDataService.findCountryCasesById(id);
         return new ResponseEntity<>(countryCases, HttpStatus.OK);
     }
